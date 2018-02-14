@@ -1,0 +1,90 @@
+<html>
+<head>
+    <title>
+        weather
+    </title>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        ul li {
+            display: inline-block;
+            width: 250px;
+            margin: 10px 10px;
+            background: #DDD;
+            padding: 20px 20px;
+            color: #00b4ae;
+
+        }
+
+        ul li img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body dir="rtl">
+<?php weather(); ?>
+</body>
+
+
+</html>
+
+<?php
+function weather()
+{
+
+    $city = "تاکستان";
+    $url = "http://parsijoo.ir/api?serviceType=weather-API&q=$city";
+
+    /************************/
+    $doc = new DOMDocument();
+    $doc->load($url);
+
+    $days = $doc->getElementsByTagName("day");
+    echo '<ul>';
+    foreach ($days as $day) {
+        echo '<li>';
+        $daynames = $day->getElementsByTagName("day-name");
+        @$dayname = $daynames->item(0)->nodeValue;
+
+        $symbols = $day->getElementsByTagName("symbol");
+        @$symbol = $symbols->item(0)->nodeValue;
+
+        $statuss = $day->getElementsByTagName("status");
+        @$status = $statuss->item(0)->nodeValue;
+
+        $temps = $day->getElementsByTagName("temp");
+        @$temp = $temps->item(0)->nodeValue;
+
+
+        $citynames = $day->getElementsByTagName("city-name");
+        @$cityname = $citynames->item(0)->nodeValue;
+
+
+        $mintemps = $day->getElementsByTagName("min-temp");
+        @$mintemp = $mintemps->item(0)->nodeValue;
+
+
+        $maxtemps = $day->getElementsByTagName("max-temp");
+        @$maxtemp = $maxtemps->item(0)->nodeValue;
+
+
+        echo "<h1>شهر:$cityname</h1>";
+        echo "<p>روز:$dayname</p>";
+        echo "<p>وضعیت:$status</p>";
+        echo "<p>درجه:$temp سیسیوس</p>";
+        echo "<p>کمترین دما:$mintemp درجه</p>";
+        echo "<p>بیشترین دما:$maxtemp درجه</p>";
+
+        $link = 'http://cdn.parsijoo.ir/static/home/source/cdn/images/services/weather';
+
+        echo '<img src="' . $link . '/' . $symbol . '.png"';
+
+        echo '</li>';
+    }
+    echo '</ul>';
+}
+
+?>
